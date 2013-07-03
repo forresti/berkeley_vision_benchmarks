@@ -48,8 +48,8 @@ Mat get_hogdescriptor_visu(Mat& origImg, vector<float>& descriptorValues)
     float radRangeForOneBin = M_PI/(float)gradientBinSize; // dividing 180° into 9 bins, how large (in rad) is one bin?
  
     // prepare data structure: 9 orientation / gradient strenghts for each cell
-    int cells_in_x_dir = 64 / cellSize;
-    int cells_in_y_dir = 128 / cellSize;
+    int cells_in_x_dir = origImg.cols / cellSize;
+    int cells_in_y_dir = origImg.rows / cellSize;
     int totalnrofcells = cells_in_x_dir * cells_in_y_dir;
     float*** gradientStrengths = new float**[cells_in_y_dir];
     int** cellUpdateCounter   = new int*[cells_in_y_dir];
@@ -134,7 +134,7 @@ Mat get_hogdescriptor_visu(Mat& origImg, vector<float>& descriptorValues)
     }
  
  
-    cout << "descriptorDataIdx = " << descriptorDataIdx << endl;
+    //cout << "descriptorDataIdx = " << descriptorDataIdx << endl;
  
     // draw cells
     for (int celly=0; celly<cells_in_y_dir; celly++)
@@ -159,7 +159,7 @@ Mat get_hogdescriptor_visu(Mat& origImg, vector<float>& descriptorValues)
                     continue;
  
                 float currRad = bin * radRangeForOneBin + radRangeForOneBin/2;
- 
+
                 float dirVecX = cos( currRad );
                 float dirVecY = sin( currRad );
                 float maxVecLen = cellSize/2;

@@ -17,7 +17,7 @@ vector<float> wrappedCvHog(cv::Mat img)
     cv::Size block_size(16,16);
     cv::Size block_stride(8,8);
     cv::Size cell_size(8,8);
-    int nOri = 15;
+    int nOri = 9;
 
     //off-the-shelf version was from opencv/opencv/samples/ocl/hog.cpp (search for cpu_hog) 
     cv::HOGDescriptor d(win_size, block_size, block_stride, cell_size, nOri, 1, -1,
@@ -40,7 +40,8 @@ void benchmarkOpenCvHOG()
     double responseTime = read_timer() - start;
     printf("OpenCV HOG time = %f \n", responseTime);
 
-    Mat hog_visualization = get_hogdescriptor_visu(img, features);   //off-the-shelf code; see helpers.cpp
+    Mat hog_visualization = get_hogdescriptor_visu(img, features);   //off-the-shelf code that uses OpenCV; see helpers.cpp
+    forrestWritePgm(hog_visualization, "Lena_hog.pgm"); //uses OpenCV
 }
 
 int main (int argc, char **argv)
