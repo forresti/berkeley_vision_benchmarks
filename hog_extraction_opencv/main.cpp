@@ -1,8 +1,6 @@
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/legacy/legacy.hpp>
-#include <opencv2/gpu/gpu.hpp>
-#include <cuda_runtime.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
