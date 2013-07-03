@@ -48,7 +48,5 @@ int main (int argc, char **argv)
 {
     benchmarkOpenCvHOG();    
 
-    //TODO: visualize HOG features
-
     return 0;
 }
