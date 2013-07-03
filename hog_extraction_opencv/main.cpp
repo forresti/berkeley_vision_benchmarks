@@ -120,10 +120,6 @@ vector<float> wrappedCvHog(cv::Mat img)
 {
     bool gamma_corr = true;
     cv::Size win_size(img.rows, img.cols);
-    //int c = 4;
-    //cv::Size block_size(c,c);
-    //cv::Size block_stride(c,c); //I think this is to select whether to do overlapping blocks
-    //cv::Size cell_size(c,c);
     cv::Size block_size(16,16);
     cv::Size block_stride(8,8);
     cv::Size cell_size(8,8);
@@ -140,59 +136,21 @@ vector<float> wrappedCvHog(cv::Mat img)
     return features;
 }
 
-void wrappedCvHogGPU(cv::Mat img)
-{
-    bool gamma_corr = true;
-    cv::Size win_size(img.rows, img.cols);
-    //int c = 4;
-    //cv::Size block_size(c,c);
-    //cv::Size block_stride(c,c); //I think this is to select whether to do overlapping blocks
-    //cv::Size cell_size(c,c);
-    cv::Size block_size(16,16);
-    cv::Size block_stride(8,8);
-    cv::Size cell_size(8,8);
-    int nOri = 15;
-
-    cv::gpu::HOGDescriptor d(win_size, block_size, block_stride, cell_size, nOri, cv::gpu::HOGDescriptor::DEFAULT_WIN_SIGMA,
-                              cv::HOGDescriptor::L2Hys, gamma_corr, cv::HOGDescriptor::DEFAULT_NLEVELS);
-    //cv::gpu::HOGDescriptor d; //there are assert statements that pretty much require default configuration
-    
-    gpu::GpuMat dImg;
-    dImg.upload(img); //this hangs, even with a small image.
-    gpu::GpuMat features;
-    cv::Size win_stride(img.rows, img.cols); //no stride, I guess
-    vector<Point> found_locations;
-
-    //d.detect(dImg, found_locations);
-
-    double start = read_timer();
-    d.getDescriptors(dImg, win_stride, features);
-    double responseTime = read_timer() - start;
-    printf("GPU HOG getDescriptors() time = %f \n", responseTime);
-
-    printf("features size = %d \n", features.rows * features.cols);
-}
-
 void benchmarkOpenCvHOG()
 {
-    Mat img = imread("../forrest_hacked_OpenCV_2_Cookbook_Code/9k_x_9k.png");
+    //Mat img = imread("../forrest_hacked_OpenCV_2_Cookbook_Code/9k_x_9k.png");
     //Mat img = imread("../forrest_hacked_OpenCV_2_Cookbook_Code/Lena_orig.png");
+    Mat img = imread("Lena.pgm");
     cv::cvtColor(img, img, CV_RGB2GRAY);   
 
     double start = read_timer();
     wrappedCvHog(img); 
     double responseTime = read_timer() - start;
-    printf("CPU OpenCV HOG time = %f \n", responseTime);
-
-    start = read_timer();
-    wrappedCvHogGPU(img); 
-    responseTime = read_timer() - start;
-    printf("GPU OpenCV HOG time (including memcpy) = %f \n", responseTime);
+    printf("OpenCV HOG time = %f \n", responseTime);
 }
 
 int main (int argc, char **argv)
 {
-    //cudaSetDevice(3); //C2050
     //demoOpenCvConvolution();
     benchmarkOpenCvConvolution();
     //benchmarkOpenCvHOG();    
