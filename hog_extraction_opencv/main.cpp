@@ -36,9 +36,11 @@ void benchmarkOpenCvHOG()
     cv::cvtColor(img, img, CV_RGB2GRAY);   
 
     double start = read_timer();
-    wrappedCvHog(img); 
+    vector<float> features = wrappedCvHog(img); 
     double responseTime = read_timer() - start;
     printf("OpenCV HOG time = %f \n", responseTime);
+
+    Mat hog_visualization = get_hogdescriptor_visu(img, features);   //off-the-shelf code; see helpers.cpp
 }
 
 int main (int argc, char **argv)

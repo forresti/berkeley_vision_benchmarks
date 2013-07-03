@@ -13,6 +13,7 @@ using namespace cv;
 
 void forrestWritePgm(cv::Mat img, std::string out_filename);
 double read_timer();
+Mat get_hogdescriptor_visu(Mat& origImg, vector<float>& descriptorValues);
 
 #endif
 
