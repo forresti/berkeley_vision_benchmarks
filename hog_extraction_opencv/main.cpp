@@ -30,11 +30,21 @@ vector<float> wrappedCvHog(cv::Mat img)
     return features;
 }
 
+//based on samples/cpp/peopledetect.cpp in opencv distribution
+void wrappedCvHogPedestrian(cv::Mat img)
+{
+    HOGDescriptor hog;
+    hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
+    vector<Rect> found, found_filtered;
+    hog.detectMultiScale(img, found, 0, Size(8,8), Size(32,32), 1.05, 2); //magic numbers from peopledetect.cpp
+}
+
 void benchmarkOpenCvHOG()
 {
     Mat img = imread("Lena.pgm");
     cv::cvtColor(img, img, CV_RGB2GRAY);   
 
+  //benchmark HOG extraction only (no detection)
     double start = read_timer();
     vector<float> features = wrappedCvHog(img); 
     double responseTime = read_timer() - start;
@@ -42,6 +52,12 @@ void benchmarkOpenCvHOG()
 
     Mat hog_visualization = get_hogdescriptor_visu(img, features);   //off-the-shelf code that uses OpenCV; see helpers.cpp
     forrestWritePgm(hog_visualization, "Lena_hog.pgm"); //uses OpenCV
+
+  //benchmark HOG extraction + pedestrian detection
+    start = read_timer();
+    wrappedCvHogPedestrian(img);
+    responseTime = read_timer() - start;
+    printf("OpenCV HOG + pedestrian detection time = %f \n", responseTime);
 }
 
 int main (int argc, char **argv)
