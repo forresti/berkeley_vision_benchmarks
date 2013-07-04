@@ -31,12 +31,12 @@ vector<float> wrappedCvHog(cv::Mat img)
 }
 
 //based on samples/cpp/peopledetect.cpp in opencv distribution
-void wrappedCvHogPedestrian(cv::Mat img)
+vector<Rect> wrappedCvHogPedestrian(cv::Mat img)
 {
     HOGDescriptor hog;
     hog.setSVMDetector(HOGDescriptor::getDefaultPeopleDetector());
-    vector<Rect> found, found_filtered;
-    hog.detectMultiScale(img, found, 0, Size(8,8), Size(32,32), 1.05, 2); //magic numbers from peopledetect.cpp
+    vector<Rect> detections;
+    hog.detectMultiScale(img, detections, 0, Size(8,8), Size(32,32), 1.05, 2); //magic numbers from peopledetect.cpp
 }
 
 void benchmarkOpenCvHOG()
@@ -55,9 +55,11 @@ void benchmarkOpenCvHOG()
 
   //benchmark HOG extraction + pedestrian detection
     start = read_timer();
-    wrappedCvHogPedestrian(img);
+    vector<Rect> detections = wrappedCvHogPedestrian(img);
     responseTime = read_timer() - start;
     printf("OpenCV HOG + pedestrian detection time = %f \n", responseTime);
+
+    Mat detection_visualization = drawDetections(img, detections);
 }
 
 int main (int argc, char **argv)

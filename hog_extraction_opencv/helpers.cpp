@@ -32,6 +32,15 @@ double read_timer()
     return (double)((start.tv_sec) + 1.0e-6 * (start.tv_usec)); //seconds
 }
 
+//adapted from peopledetect.cpp in opencv samples
+Mat drawDetections(Mat& origImg, vector<Rect> detections){
+    
+    for(int i=0; i<detections.size(); i++){
+        rectangle(origImg, detections[i].tl(), detections[i].br(), cv::Scalar(0,255,0), 3);
+    }
+    return origImg; //with detected bounding boxes drawn on
+}
+
 // thanks: http://www.juergenwiki.de/work/wiki/doku.php?id=public%3ahog_descriptor_computation_and_visualization
 Mat get_hogdescriptor_visu(Mat& origImg, vector<float>& descriptorValues)
 {   
